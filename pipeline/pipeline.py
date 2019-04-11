@@ -82,7 +82,13 @@ def fit(training_data_processed):
     return xgb_model, categories
 
 
-def generate_structure_candidates(img_hsv, seg_config, filter_min_size=None, plot=False):
+def generate_structure_candidates(
+        img_hsv,
+        seg_config,
+        filter_min_size=None,
+        process_residual=True,
+        plot=False
+):
     img_s = img_hsv[:, :, 1]
     img_shape = (
         img_hsv.shape[0],
@@ -176,13 +182,15 @@ def generate_structure_candidates(img_hsv, seg_config, filter_min_size=None, plo
         cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE
     )
-    final_edge_contours = []
-    for c in remaining_edge_contours:
-        final_edge_contours.append(cv2.convexHull(c))
+    if process_residual:
+        final_edge_contours = []
 
-    print("%d remaining edge candidates found" % len(final_edge_contours))
+        for c in remaining_edge_contours:
+            final_edge_contours.append(cv2.convexHull(c))
 
-    all_contours.extend(final_edge_contours)
+        print("%d remaining edge candidates found" % len(final_edge_contours))
+
+        all_contours.extend(final_edge_contours)
 
     print("%d total candidates found" % len(all_contours))
 
