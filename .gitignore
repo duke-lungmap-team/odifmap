@@ -1,0 +1,8 @@
+.idea
+data
+*.ipynb
+*.pkl
+tmp
+*.tiff
+*.tif
+*.zip
