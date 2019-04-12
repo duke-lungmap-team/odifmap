@@ -25,7 +25,6 @@ ellipse90_strel = np.rot90(ellipse_strel)
 circle_strel = np.bitwise_or(ellipse_strel, ellipse90_strel)
 
 true_blue = 120  # in cv2 hue channel (ranges from 0 to 179)
-MAX_CELL_AREA = np.pi * (16 ** 2)  # assume circular cell w/ diameter=32
 
 
 def plot_contours(img_hsv, contours):
@@ -457,7 +456,14 @@ def numpy_json_converter(o):
         return o.tolist()
 
 
-def process_structures_into_cells(img_hsv, save_dir, structure_contours, plot=False):
+def process_structures_into_cells(
+        img_hsv,
+        save_dir,
+        structure_contours,
+        cell_color_list,
+        max_cell_area,
+        plot=False
+):
     structure_contours_with_cells = []
 
     if not os.path.exists(save_dir):
@@ -482,7 +488,7 @@ def process_structures_into_cells(img_hsv, save_dir, structure_contours, plot=Fa
     for c in structure_contours:
         area = cv2.contourArea(c)
 
-        if area > MAX_CELL_AREA:
+        if area > max_cell_area:
             likely_multi_cells.append(c)
         else:
             structure_contours_with_cells.append(
@@ -492,12 +498,23 @@ def process_structures_into_cells(img_hsv, save_dir, structure_contours, plot=Fa
                 }
             )
 
-    green_soft_mask = create_color_soft_mask(60, img_hsv, clip=1.0)
-    blue_soft_mask = create_color_soft_mask(120, img_hsv, clip=1.0)
-    cyan_soft_mask = create_color_soft_mask(90, img_hsv, clip=1.0)
-    signal_soft_mask = np.mean([green_soft_mask, blue_soft_mask, cyan_soft_mask], axis=0)
+    soft_masks = []
+    for color in cell_color_list:
+        hsv_bounds = color_utils.HSV_RANGES[color]
 
-    ret, non_dark_thresh = cv2.threshold(signal_soft_mask, 65, 255, cv2.THRESH_BINARY)
+        for hsv_bound in hsv_bounds:
+            h_lower = hsv_bound['lower'][0]
+            h_upper = hsv_bound['upper'][0]
+            soft_mask = create_color_soft_mask(
+                np.mean([h_lower, h_upper]),
+                img_hsv,
+                clip=1.0
+            )
+            soft_masks.append(soft_mask)
+
+    signal_soft_mask = np.mean(soft_masks, axis=0)
+
+    ret, non_dark_thresh = cv2.threshold(signal_soft_mask, 95, 255, cv2.THRESH_BINARY)
 
     for i, mc in enumerate(likely_multi_cells):
         print("multi-cell %d" % i)
@@ -529,16 +546,42 @@ def process_structures_into_cells(img_hsv, save_dir, structure_contours, plot=Fa
         new_contours = split_multi_cell(
             signal_img_x,
             final_multi_cell_mask_x,
-            MAX_CELL_AREA,
+            max_cell_area,
             plot=plot
         )
 
         final_sc_contours = []
 
         for new_contour in new_contours:
-            peri = cv2.arcLength(new_contour, True)
-            smooth_c = cv2.approxPolyDP(new_contour, 0.008 * peri, True)
-            final_sc_contours.append(smooth_c + [min_x, min_y])
+            cell_mask = np.zeros(signal_img_x.shape, dtype=np.uint8)
+            cv2.drawContours(
+                cell_mask,
+                [new_contour],
+                -1,
+                255,
+                cv2.FILLED
+            )
+            cell_mask = cv2.morphologyEx(
+                cell_mask,
+                cv2.MORPH_OPEN,
+                cross_strel,
+                iterations=4
+            )
+            cell_mask = cv2.dilate(
+                cell_mask,
+                circle_strel,
+                iterations=1
+            )
+            _, morphed_contours, _ = cv2.findContours(
+                cell_mask,
+                cv2.RETR_CCOMP,
+                cv2.CHAIN_APPROX_SIMPLE
+            )
+
+            for c in morphed_contours:
+                peri = cv2.arcLength(c, True)
+                smooth_c = cv2.approxPolyDP(c, 0.015 * peri, True)
+                final_sc_contours.append(smooth_c + [min_x, min_y])
 
         structure_contours_with_cells.append(
             {

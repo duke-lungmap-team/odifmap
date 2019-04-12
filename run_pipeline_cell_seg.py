@@ -23,7 +23,7 @@ test_save_dir = os.path.join(
     os.path.basename(test_img_path)
 )
 
-cell_radius = 18
+cell_radius = 16
 cell_size = np.pi * (cell_radius ** 2)
 
 seg_config = [
@@ -51,6 +51,8 @@ structures_with_cells = utils.process_structures_into_cells(
     test_img_hsv,
     test_save_dir,
     all_color_contours,
+    ['green', 'cyan', 'blue'],
+    cell_size,
     plot=False
 )
 
