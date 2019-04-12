@@ -6,3 +6,4 @@ tmp
 *.tiff
 *.tif
 *.zip
+__pycache__
