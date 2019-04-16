@@ -3,7 +3,7 @@ import numpy as np
 from pipeline import utils, pipeline
 import pickle
 
-cell_radius = 18
+cell_radius = 16
 cell_size = np.pi * (cell_radius ** 2)
 
 seg_config = [
@@ -35,17 +35,16 @@ seg_config = [
 ]
 
 image_set_dir = 'mm_e16.5_20x_sox9_sftpc_acta2/light_color_corrected'
-
-# make our 'tmp' directory for caching trained & tested pipeline instances
-if not os.path.isdir('tmp'):
-    os.mkdir('tmp')
-
-
+image_set_path = os.path.join('data', image_set_dir)
 output_path = os.path.join(
     'tmp',
     '_'.join([image_set_dir, 'pipeline'])
 )
-image_set_path = os.path.join('data', image_set_dir)
+
+# make our 'tmp' directory for caching trained & tested pipeline instances
+if not os.path.isdir(output_path):
+    os.makedirs(output_path, exist_ok=True)
+
 
 try:
     # load pickled model
