@@ -1,1 +1,1 @@
-# ihc-segmentation-final
+# ihc-analysis-pipeline
