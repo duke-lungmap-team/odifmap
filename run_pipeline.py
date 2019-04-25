@@ -95,5 +95,7 @@ pipeline.plot_test_results(test_img_hsv, candidate_contours, pred_results, outpu
 #     test_img_hsv,
 #     os.path.join(output_path, 'regions'),
 #     candidate_contours,
-#     plot=False
+#     cell_color_list=['green', 'cyan'],
+#     max_cell_area=1.5*cell_size,
+#     plot=True
 # )
