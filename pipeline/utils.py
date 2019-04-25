@@ -302,7 +302,7 @@ def dilate_contours_by_signal_mask(contours, signal_mask):
         new_mask, signal, orig = res.get()
 
         if signal > 0.7:
-            _, tmp_contours, _ = cv2.findContours(
+            tmp_contours, _ = cv2.findContours(
                 new_mask,
                 cv2.RETR_EXTERNAL,
                 cv2.CHAIN_APPROX_SIMPLE
@@ -376,7 +376,7 @@ def create_color_soft_mask(hue_center, hsv_img, clip=1.0):
 
 
 def split_multi_cell(signal_img, multi_cell_mask, max_cell_area, plot=False):
-    _, contour_tree, hierarchy = cv2.findContours(
+    contour_tree, hierarchy = cv2.findContours(
         multi_cell_mask.astype(np.uint8),
         cv2.RETR_CCOMP,
         cv2.CHAIN_APPROX_SIMPLE
@@ -572,7 +572,7 @@ def process_structures_into_cells(
                 circle_strel,
                 iterations=1
             )
-            _, morphed_contours, _ = cv2.findContours(
+            morphed_contours, _ = cv2.findContours(
                 cell_mask,
                 cv2.RETR_CCOMP,
                 cv2.CHAIN_APPROX_SIMPLE

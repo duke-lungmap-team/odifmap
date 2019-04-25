@@ -177,7 +177,7 @@ def generate_structure_candidates(
             plt.imshow(edge_mask)
             plt.show()
 
-    _, remaining_edge_contours, _ = cv2.findContours(
+    remaining_edge_contours, _ = cv2.findContours(
         edge_mask,
         cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE
