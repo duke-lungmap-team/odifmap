@@ -200,6 +200,7 @@ def process_image(img_hsv, blur_kernel_small=(15, 15), blur_kernel_large=(127, 1
     edge_mask = cv2.dilate(edge_mask, (3, 3), iterations=blur_kernel_small[0])
 
     # get black mask as black can never be a "signal"
+    # TODO: should 'holes' mask color be configurable? will it always be black?
     black_mask = color_utils.create_mask(img_hsv, colors=['black'])
     edge_mask = np.bitwise_and(edge_mask, ~black_mask)
 
