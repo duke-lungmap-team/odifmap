@@ -1,5 +1,4 @@
 certifi==2019.3.9
-git+https://github.com/whitews/cv-color-features.git
 git+https://github.com/whitews/cv2-extras.git
 cycler==0.10.0
 decorator==4.4.0

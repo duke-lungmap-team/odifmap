@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 import os
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
-from cv_color_features import utils as color_utils
 import cv2_extras as cv2x
-from pipeline import utils
+from pipeline import utils, color_utils
 
 # weird import style to un-confuse PyCharm
 try:
