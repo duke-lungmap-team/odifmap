@@ -15,38 +15,22 @@ try:
 except ImportError:
     import cv2
 
-# Dilation/erosion kernels
-# noinspection PyUnresolvedReferences
-cross_strel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
-block_strel = np.ones((3, 3))
-# noinspection PyUnresolvedReferences
-ellipse_strel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-ellipse90_strel = np.rot90(ellipse_strel)
-circle_strel = np.bitwise_or(ellipse_strel, ellipse90_strel)
 
 true_blue = 120  # in cv2 hue channel (ranges from 0 to 179)
-
-
-def plot_contours(img_hsv, contours):
-    new_img = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2RGB)
-    cv2.drawContours(new_img, contours, -1, (0, 255, 0), 5)
-    plt.figure(figsize=(16, 16))
-    plt.imshow(new_img)
-    plt.show()
 
 
 def non_uniformity_correction(img_hsv):
     img_v = img_hsv[:, :, 2]
 
     # get the blue mask
-    b_mask = color_utils.create_mask(img_hsv, colors=['blue'])
+    b_mask = color_utils.create_color_mask(img_hsv, colors=['blue'])
 
     img_v_corr = cv2x.correct_nonuniformity(img_v, mask=b_mask)
     img_hsv_corr = img_hsv.copy()
     img_hsv_corr[:, :, 2] = img_v_corr
 
     # repair black regions
-    black_mask = color_utils.create_mask(img_hsv, colors=['black'])
+    black_mask = color_utils.create_color_mask(img_hsv, colors=['black'])
     img_hsv_corr[black_mask > 0, 2] = img_hsv[black_mask > 0, 2]
 
     return img_hsv_corr
@@ -58,13 +42,15 @@ def find_color_correction_reference(hsv_imgs):
 
     for i, img_hsv in enumerate(hsv_imgs):
         # get the blue mask
-        b_mask = color_utils.create_mask(img_hsv, colors=['blue'])
+        # TODO: reference color should be configurable, not hard-coded
+        b_mask = color_utils.create_color_mask(img_hsv, colors=['blue'])
         b_mask_img_h = cv2.bitwise_and(img_hsv[:, :, 0], img_hsv[:, :, 0], mask=b_mask)
         b_h_values = b_mask_img_h[b_mask_img_h > 0].flatten()
 
         b_h_value_counts.append(b_h_values.shape[0])
         b_h_means.append(np.mean(b_h_values))
 
+    # TODO: again the reference hue should be configurable, not hard-coded
     b_h_mean_dev = np.abs(np.array(b_h_means) - true_blue)
     max_b_dev = b_h_mean_dev.max()
 
@@ -201,10 +187,8 @@ def process_image(img_hsv, blur_kernel_small=(15, 15), blur_kernel_large=(127, 1
 
     # get black mask as black can never be a "signal"
     # TODO: should 'holes' mask color be configurable? will it always be black?
-    black_mask = color_utils.create_mask(img_hsv, colors=['black'])
+    black_mask = color_utils.create_color_mask(img_hsv, colors=['black'])
     edge_mask = np.bitwise_and(edge_mask, ~black_mask)
-
-    # edge_mask = cv2.dilate(edge_mask, cross_strel, iterations=1)
 
     return b_suppress_img_hsv, edge_mask, black_mask
 
@@ -223,7 +207,7 @@ def generate_color_contours(
     tmp_color_img = cv2.blur(tmp_color_img, blur_kernel)
     tmp_color_img = cv2.cvtColor(tmp_color_img, cv2.COLOR_RGB2HSV)
 
-    color_mask = color_utils.create_mask(tmp_color_img, colors)
+    color_mask = color_utils.create_color_mask(tmp_color_img, colors)
 
     color_mask = cv2.bitwise_and(
         color_mask,
@@ -239,8 +223,8 @@ def generate_color_contours(
 
     # do a couple dilation iterations to smooth some outside edges & connect any
     # adjacent cells each other
-    color_mask = cv2.dilate(color_mask, cross_strel, iterations=2)
-    color_mask = cv2.erode(color_mask, cross_strel, iterations=2)
+    color_mask = cv2.dilate(color_mask, cv2x.cross_strel, iterations=2)
+    color_mask = cv2.erode(color_mask, cv2x.cross_strel, iterations=2)
 
     # filter remaining contours by size
     contours = cv2x.filter_contours_by_size(
@@ -271,7 +255,7 @@ def generate_saturation_contours(
         mask=mask
     )
     mode_s = cv2.inRange(img_s_blur, med, 255)
-    mode_s = cv2.erode(mode_s, block_strel, iterations=2)
+    mode_s = cv2.erode(mode_s, cv2x.block_strel, iterations=2)
 
     contours = cv2x.filter_contours_by_size(
         mode_s,
@@ -333,38 +317,10 @@ def update_edge_mask(edge_mask, candidate_mask=None, holes_mask=None, filter_min
     cv2.drawContours(edge_mask, edge_contours, -1, 255, -1)
 
     if holes_mask is not None:
-        # "unfill" the holes
+        # "un-fill" the holes
         edge_mask = np.bitwise_and(edge_mask, ~holes_mask)
 
     return edge_mask
-
-
-def smooth_contours(contours, peri_factor=0.007):
-    # The previous contours represent the final contour count,
-    # but not their final shape/size. The final step uses approxPolyDP, followed
-    # by a few more dilation iterations, but we won't re-draw & extract the contours,
-    # as that would possibly connect some of them together. However, we will
-    # draw them for the mask to exclude the regions from the next group of candidates
-    smoothed_contours = []
-
-    for c in contours:
-        peri = cv2.arcLength(c, True)
-        smooth_c = cv2.approxPolyDP(c, peri_factor * np.sqrt(peri), True)
-
-        smoothed_contours.append(smooth_c)
-
-    return smoothed_contours
-
-
-def save_image(base_dir, img_name, rgb_img):
-    image_path = os.path.join(
-        base_dir,
-        img_name
-    )
-    cv2.imwrite(
-        image_path,
-        cv2.cvtColor(rgb_img, cv2.COLOR_RGB2BGR)
-    )
 
 
 def create_color_soft_mask(hue_center, hsv_img, clip=1.0):
@@ -482,7 +438,7 @@ def process_structures_into_cells(
 
     seg_image = img_rgb.copy()
     cv2.drawContours(seg_image, structure_contours, -1, (0, 255, 0), 3)
-    save_image(save_dir, '01_structures.tif', seg_image)
+    cv2x.save_image(save_dir, '01_structures.tif', seg_image)
 
     likely_multi_cells = []
 
@@ -533,12 +489,12 @@ def process_structures_into_cells(
         )
         final_multi_cell_mask_x = cv2.erode(
             final_multi_cell_mask_x,
-            cross_strel,
+            cv2x.cross_strel,
             iterations=1
         )
         final_multi_cell_mask_x = cv2.dilate(
             final_multi_cell_mask_x,
-            cross_strel,
+            cv2x.cross_strel,
             iterations=1
         )
 
@@ -565,12 +521,12 @@ def process_structures_into_cells(
             cell_mask = cv2.morphologyEx(
                 cell_mask,
                 cv2.MORPH_OPEN,
-                cross_strel,
+                cv2x.cross_strel,
                 iterations=4
             )
             cell_mask = cv2.dilate(
                 cell_mask,
-                circle_strel,
+                cv2x.circle_strel,
                 iterations=1
             )
             morphed_contours, _ = cv2.findContours(
@@ -596,6 +552,6 @@ def process_structures_into_cells(
         if len(structure['cells']) > 0:
             cv2.drawContours(seg_image, structure['cells'], -1, (128, 255, 255), 1)
 
-    save_image(save_dir, '02_single_cells.tif', seg_image)
+    cv2x.save_image(save_dir, '02_single_cells.tif', seg_image)
 
     return structure_contours_with_cells

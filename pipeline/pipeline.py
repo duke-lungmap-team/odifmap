@@ -5,6 +5,7 @@ import os
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 from cv_color_features import utils as color_utils
+import cv2_extras as cv2x
 from pipeline import utils
 
 # weird import style to un-confuse PyCharm
@@ -161,7 +162,7 @@ def generate_structure_candidates(
             edge_mask
         )
         print("\t%d contours fit signal mask" % len(contours))
-        contours = utils.smooth_contours(contours)
+        contours = cv2x.smooth_contours(contours)
         all_contours.extend(contours)
 
         # update intermediate candidate mask

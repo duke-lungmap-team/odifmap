@@ -1,8 +1,9 @@
 import os
 import numpy as np
-from pipeline import utils, pipeline
+from pipeline import pipeline
 from glob import glob
 from PIL import Image
+import cv2_extras as cv2x
 
 # weird import style to un-confuse PyCharm
 try:
@@ -67,7 +68,7 @@ candidate_contours = pipeline.generate_structure_candidates(
     filter_min_size=3 * cell_size,
     plot=True
 )
-utils.plot_contours(tmp_image, candidate_contours)
+cv2x.plot_contours(tmp_image, candidate_contours)
 # test_data_processed = pipeline.process_test_data(test_img_hsv, candidate_contours)
 
 # plot functions
