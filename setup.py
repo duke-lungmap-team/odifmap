@@ -10,7 +10,7 @@ setup(
     description='A Python library for segmentation and classification of objects in microscopy images',
     install_requires=[
         'cv2-extras',
-        'matplotlib (>=3.0)'
+        'matplotlib (>=3.0)',
         'numpy (>=1.16)',
         'opencv-python (>=4.1)',
         'pandas (>=0.24)',
