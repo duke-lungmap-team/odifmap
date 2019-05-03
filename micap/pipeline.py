@@ -120,10 +120,6 @@ def generate_structure_candidates(
         blur_kernel_small=blur_kernel_small,
         blur_kernel_large=blur_kernel_large
     )
-    if plot:
-        plt.figure(figsize=(12, 12))
-        plt.imshow(edge_mask)
-        plt.show()
 
     edge_mask = utils.update_edge_mask(
         edge_mask,
@@ -131,8 +127,9 @@ def generate_structure_candidates(
         holes_mask=holes_mask
     )
     if plot:
-        plt.figure(figsize=(12, 12))
+        plt.figure(figsize=(16, 16))
         plt.imshow(edge_mask)
+        plt.axis('off')
         plt.show()
 
     candidate_mask = None
@@ -202,8 +199,20 @@ def generate_structure_candidates(
             filter_min_size=filter_min_size
         )
         if plot:
-            plt.figure(figsize=(12, 12))
+            plt.figure(figsize=(16, 16))
             plt.imshow(edge_mask)
+            plt.axis('off')
+            plt.show()
+
+            new_img = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2RGB)
+            tmp_mask = np.zeros(img_shape, dtype=np.uint8)
+            cv2.drawContours(tmp_mask, all_contours, -1, 255, -1)
+            new_img = cv2.bitwise_and(new_img, new_img, mask=tmp_mask)
+
+            cv2.drawContours(new_img, all_contours, -1, (0, 255, 0), 5)
+            plt.figure(figsize=(16, 16))
+            plt.imshow(new_img)
+            plt.axis('off')
             plt.show()
 
     remaining_edge_contours, _ = cv2.findContours(
@@ -280,7 +289,7 @@ def predict(test_data_processed, xgb_model, categories):
     return pred_results
 
 
-def plot_test_results(img_hsv, contours, pred_results, save_dir):
+def plot_test_results(img_hsv, contours, pred_results, save_dir, annotate=True):
     print("Plotting results...")
     label_contours = {}
 
@@ -311,14 +320,15 @@ def plot_test_results(img_hsv, contours, pred_results, save_dir):
             idx = c_dict['contour_indices'][i]
             prob = c_dict['prob'][i]
 
-            plt.text(
-                x,
-                y,
-                "%d (%.2f)" % (idx, prob),
-                fontsize=12,
-                color='lime',
-                backgroundcolor='#00000088'
-            )
+            if annotate:
+                plt.text(
+                    x,
+                    y,
+                    "%d (%.2f)" % (idx, prob),
+                    fontsize=12,
+                    color='lime',
+                    backgroundcolor='#00000088'
+                )
 
         if save_dir is not None:
             plt.savefig(
