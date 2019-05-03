@@ -359,6 +359,20 @@ def split_multi_cell(signal_img, multi_cell_mask, max_cell_area, plot=False):
             # just right, probably a cell so save it
             single_cell_contours.append(sub_c)
 
+            if plot:
+                sc_mask = np.zeros(signal_img.shape, dtype=np.uint8)
+                cv2.drawContours(
+                    sc_mask,
+                    [sub_c],
+                    -1,
+                    255,
+                    cv2.FILLED
+                )
+                plt.figure(figsize=(16, 16))
+                plt.imshow(sc_mask)
+                plt.axis('off')
+                plt.show()
+
     for c_idx in sub_multi_contours_idx:
 
         mc_mask = np.zeros(signal_img.shape, dtype=np.uint8)
@@ -395,7 +409,9 @@ def split_multi_cell(signal_img, multi_cell_mask, max_cell_area, plot=False):
         label_im[mc_mask.astype(np.bool)] = labels
 
         if plot:
+            plt.figure(figsize=(16, 16))
             plt.imshow(label_im)
+            plt.axis('off')
             plt.show()
 
         for label in range(n_clusters):
@@ -500,6 +516,20 @@ def process_structures_into_cells(
 
         signal_img_x = signal_soft_mask[min_y:max_y, min_x:max_x].astype('float')
 
+        if plot:
+            plot_img_mc = seg_image[min_y:max_y, min_x:max_x].copy()
+            cv2.drawContours(
+                plot_img_mc,
+                [mc_x],
+                -1,
+                (0, 255, 0),
+                3
+            )
+            plt.figure(figsize=(16, 16))
+            plt.imshow(plot_img_mc)
+            plt.axis('off')
+            plt.show()
+
         new_contours = split_multi_cell(
             signal_img_x,
             final_multi_cell_mask_x,
@@ -508,6 +538,7 @@ def process_structures_into_cells(
         )
 
         final_sc_contours = []
+        non_trans_smooth_contours = []
 
         for new_contour in new_contours:
             cell_mask = np.zeros(signal_img_x.shape, dtype=np.uint8)
@@ -538,6 +569,7 @@ def process_structures_into_cells(
             for c in morphed_contours:
                 peri = cv2.arcLength(c, True)
                 smooth_c = cv2.approxPolyDP(c, 0.015 * peri, True)
+                non_trans_smooth_contours.append(smooth_c)
                 final_sc_contours.append(smooth_c + [min_x, min_y])
 
         structure_contours_with_cells.append(
@@ -546,6 +578,27 @@ def process_structures_into_cells(
                 'cells': final_sc_contours
             }
         )
+
+        if plot:
+            plot_img_mc = seg_image[min_y:max_y, min_x:max_x].copy()
+            cv2.drawContours(
+                plot_img_mc,
+                non_trans_smooth_contours,
+                -1,
+                (0, 255, 0),
+                1
+            )
+            cv2.drawContours(
+                plot_img_mc,
+                [mc_x],
+                -1,
+                (0, 255, 0),
+                3
+            )
+            plt.figure(figsize=(16, 16))
+            plt.imshow(plot_img_mc)
+            plt.axis('off')
+            plt.show()
 
     seg_image = img_rgb.copy()
     for structure in structure_contours_with_cells:
