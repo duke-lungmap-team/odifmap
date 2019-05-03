@@ -86,7 +86,10 @@ def generate_structure_candidates(
         img_hsv,
         seg_config,
         filter_min_size=None,
+        dog_factor=8,
         process_residual=True,
+        predict_model=None,
+        categories=None,
         plot=False
 ):
     img_s = img_hsv[:, :, 1]
@@ -102,7 +105,9 @@ def generate_structure_candidates(
         if blur_kernel_small % 2 == 0:
             blur_kernel_small = blur_kernel_small - 1
 
-        blur_kernel_large = (8 * blur_kernel_small) - 1
+        blur_kernel_large = dog_factor * blur_kernel_small
+        if blur_kernel_large % 2 == 0:
+            blur_kernel_large = blur_kernel_large - 1
 
         blur_kernel_small = (blur_kernel_small, blur_kernel_small)
         blur_kernel_large = (blur_kernel_large, blur_kernel_large)
@@ -162,6 +167,28 @@ def generate_structure_candidates(
         )
         print("\t%d contours fit signal mask" % len(contours))
         contours = cv2x.smooth_contours(contours)
+
+        if predict_model is not None:
+            test_data_processed = process_test_data(img_hsv, contours)
+            pred_results = predict(
+                test_data_processed,
+                predict_model,
+                categories
+            )
+
+            tmp_contours = []
+            for res in pred_results:
+                if res['label'] == 'background':
+                    continue
+
+                tmp_contours.append(contours[res['contour_index']])
+
+            print(
+                "\t%d contours classified as background, ignoring..." %
+                (len(contours) - len(tmp_contours))
+            )
+            contours = tmp_contours
+
         all_contours.extend(contours)
 
         # update intermediate candidate mask
