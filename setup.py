@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='micap',
-    version='0.2',
+    version='0.2.1',
     packages=['micap'],
     license='BSD 2-Clause License',
     long_description=open('README.md').read(),

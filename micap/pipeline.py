@@ -90,13 +90,21 @@ def generate_structure_candidates(
         process_residual=True,
         predict_model=None,
         categories=None,
-        plot=False
+        plot=False,
+        progress_callback=None
 ):
     img_s = img_hsv[:, :, 1]
     img_shape = (
         img_hsv.shape[0],
         img_hsv.shape[1]
     )
+
+    progress = 0
+    process_step_count = 1
+    if progress_callback is not None:
+        # determine number of steps as a rough estimate of progress
+        # calculated as the number of seg stages plus 1 for pre-processing
+        process_step_count = 1 + len(seg_config)
 
     print("Pre-processing test image...")
     # determine kernel sizes for DoG
@@ -120,6 +128,9 @@ def generate_structure_candidates(
         blur_kernel_small=blur_kernel_small,
         blur_kernel_large=blur_kernel_large
     )
+    if progress_callback is not None:
+        progress += 1
+        progress_callback(progress / float(process_step_count))
 
     edge_mask = utils.update_edge_mask(
         edge_mask,
@@ -164,6 +175,10 @@ def generate_structure_candidates(
         )
         print("\t%d contours fit signal mask" % len(contours))
         contours = cv2x.smooth_contours(contours)
+
+        if progress_callback is not None:
+            progress += 1
+            progress_callback(progress / float(process_step_count))
 
         if predict_model is not None:
             test_data_processed = process_test_data(img_hsv, contours)
