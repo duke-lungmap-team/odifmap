@@ -180,6 +180,9 @@ def generate_structure_candidates(
             progress += 1
             progress_callback(progress / float(process_step_count))
 
+        if len(contours) == 0:
+            continue
+
         if predict_model is not None:
             test_data_processed = process_test_data(img_hsv, contours)
             pred_results = predict(
