@@ -91,7 +91,8 @@ def generate_structure_candidates(
         predict_model=None,
         categories=None,
         plot=False,
-        progress_callback=None
+        progress_callback=None,
+        use_signal_mask=True
 ):
     img_s = img_hsv[:, :, 1]
     img_shape = (
@@ -168,12 +169,12 @@ def generate_structure_candidates(
             )
         else:
             raise ValueError("Invalid config, use 'color' or 'saturation' for 'type'")
-
-        contours = utils.dilate_contours_by_signal_mask(
-            contours,
-            edge_mask
-        )
-        print("\t%d contours fit signal mask" % len(contours))
+        if use_signal_mask:
+            contours = utils.dilate_contours_by_signal_mask(
+                contours,
+                edge_mask
+            )
+            print("\t%d contours fit signal mask" % len(contours))
         contours = cv2x.smooth_contours(contours)
 
         if progress_callback is not None:
