@@ -14,7 +14,7 @@ setup(
         'numpy (>=1.16)',
         'opencv-python (>=4.1)',
         'pandas (>=0.24)',
-        'Pillow (>=6.0.0)',
+        'Pillow (>=6.2.2)',
         'scikit-image (>=0.15)',
         'scikit-learn (>=0.20.3)',
         'scipy (>=1.2)',
