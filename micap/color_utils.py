@@ -493,7 +493,7 @@ def generate_features(
     mask = np.zeros(hsv_img_as_numpy.shape[0:2], dtype=np.uint8)
     cv2.drawContours(mask, [polygon_points], 0, 255, cv2.FILLED)
 
-    if inset_center_distance is 'auto':
+    if inset_center_distance == 'auto':
         # calculate minimum contour dimension
         box = cv2.minAreaRect(polygon_points)
         cnt_w, cnt_h = box[1]
