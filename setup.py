@@ -9,16 +9,15 @@ setup(
     author='Scott White',
     description='A Python library for segmentation and classification of objects in microscopy images',
     install_requires=[
-        'cv2-extras @ git+https://github.com/whitews/cv2-extras.git',
-        'matplotlib (>=3.0)',
-        'numpy (>=1.16)',
-        'opencv-python (>=4.1)',
-        'pandas (>=0.24)',
-        'Pillow (>=6.2.2)',
-        'scikit-image (>=0.15)',
         'scikit-learn (>=0.20.3)',
+        'scikit-image (>=0.15)',
+        'opencv-python (>=4.1)',
         'scipy (>=1.2)',
-        'scipy (>=1.2.1)',
-        'xgboost (>=0.82)'
+        'numpy (>=1.16)',
+        'matplotlib (>=3.0)',
+        'Pillow (>=6.2.2)',
+        'pandas (>=0.24)',
+        'xgboost (>=1.1)',
+        'cv2-extras @ git+https://github.com/whitews/cv2-extras.git'
     ]
 )
