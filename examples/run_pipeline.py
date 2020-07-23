@@ -96,7 +96,8 @@ candidate_contours = pipeline.generate_structure_candidates(
     use_signal_mask=False
 )
 test_data_processed = pipeline.process_test_data(test_img_hsv, candidate_contours)
-if test_data_processed.shape[0]>0:
+
+if test_data_processed.shape[0] > 0:
     pred_results = pipeline.predict(test_data_processed, xgb_model, categories)
 
     # plot functions
