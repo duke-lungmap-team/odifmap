@@ -5,7 +5,7 @@ dist/
 data
 *.ipynb
 *.pkl
-tmp
+tmp/
 *.tiff
 *.tif
 *.zip
