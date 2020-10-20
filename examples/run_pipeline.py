@@ -39,10 +39,9 @@ seg_config = [
     },
 ]
 
-image_set_dir = 'examples/images'
+image_set_dir = 'images'
 image_set_path = image_set_dir
 output_path = os.path.join(
-    'examples',
     'images',
     'tmp'
 )
