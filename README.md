@@ -1,5 +1,5 @@
-# microscopy-analysis-pipeline (micap)
-A Python library for segmentation and classification of objects in microscopy images.
+# Immuno-fluorescence Microscopy Analysis Pipeline (ifmap)
+A Python library for the segmentation and classification of objects in immunofluorescence microscopy images.
 
 ## Environment
 To match the environment requirements needed to complete the examples, please install all
