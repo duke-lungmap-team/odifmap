@@ -1,13 +1,13 @@
 from setuptools import setup
 
 setup(
-    name='micap',
-    version='0.2.1',
-    packages=['micap'],
+    name='ifmap',
+    version='0.3.0b',
+    packages=['ifmap'],
     license='BSD 2-Clause License',
     long_description=open('README.md').read(),
     author='Scott White',
-    description='A Python library for segmentation and classification of objects in microscopy images',
+    description='A Python library for object segmentation & classification in immunofluorescence microscopy images',
     install_requires=[
         'scikit-learn (>=0.20.3)',
         'scikit-image (>=0.15)',

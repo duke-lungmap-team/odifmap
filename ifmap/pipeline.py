@@ -5,7 +5,7 @@ import os
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import cv2_extras as cv2x
-from micap import utils, color_utils
+from ifmap import utils, color_utils
 
 # weird import style to un-confuse PyCharm
 try:

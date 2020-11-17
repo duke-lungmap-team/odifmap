@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from micap import utils, pipeline
+from ifmap import utils, pipeline
 import pickle
 
 cell_radius = 16

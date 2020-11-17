@@ -11,12 +11,12 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Importing `micap` modules
+### Importing `ifmap` modules
 
-The `micap` package contains 2 modules used for executing the analysis pipeline: `utils` 
+The `ifmap` package contains 2 modules used for executing the analysis pipeline: `utils` 
 and `pipeline`:
 
-    from micap import utils, pipeline
+    from ifmap import utils, pipeline
 
 The `utils` module contains functions related to pre- and post-processing, including 
 loading the training data and processing the pipeline's structure contours into cell
