@@ -1,5 +1,6 @@
-# Immuno-fluorescence Microscopy Analysis Pipeline (ifmap)
-A Python library for the segmentation and classification of objects in immunofluorescence microscopy images.
+# Immunofluorescence Microscopy Analysis Pipeline (ifmap)
+A Python library for the segmentation and classification of objects in immunofluorescence 
+microscopy images.
 
 ## Environment
 To match the environment requirements needed to complete the examples, please install all
