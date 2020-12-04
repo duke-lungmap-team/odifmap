@@ -1,0 +1,16 @@
+{
+  "species": "mouse",
+  "organ": "lung",
+  "age": "E16.5",
+  "magnification": "20X",
+  "probes": [
+    "SOX9",
+    "SFTPC",
+    "ACTA2"
+  ],
+  "colors": [
+    "green",
+    "red",
+    "white"
+  ]
+}
