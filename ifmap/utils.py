@@ -105,7 +105,7 @@ def get_training_data_for_image_set(image_set_dir):
     training_data = {}
 
     for image_name, regions_dict in regions_json.items():
-        print("Retrieving training data for %s" % image_name)
+        print("Processing training data for %s" % image_name)
         tmp_image = Image.open(os.path.join(image_set_dir, image_name))
         tmp_image = np.asarray(tmp_image)
 
