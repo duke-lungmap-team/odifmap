@@ -1,5 +1,5 @@
-# Immunofluorescence Microscopy Analysis Pipeline (ifmap)
-A Python library for the segmentation and classification of objects in immunofluorescence 
+# Onotology Driven Immunofluorescence Microscopy Analysis Pipeline (odifmap)
+A Python library for ontology-driven segmentation and classification of objects in immunofluorescence 
 microscopy images.
 
 ## Environment
@@ -14,10 +14,10 @@ pip install -r requirements.txt
 
 ### Importing `ifmap` modules
 
-The `ifmap` package contains 2 modules used for executing the analysis pipeline: `utils` 
+The `odifmap` package contains 2 modules used for executing the analysis pipeline: `utils` 
 and `pipeline`:
 
-    from ifmap import utils, pipeline
+    from odifmap import utils, pipeline
 
 The `utils` module contains functions related to pre- and post-processing, including 
 loading the training data and processing the pipeline's structure contours into cell
