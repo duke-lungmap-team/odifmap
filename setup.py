@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='ifmap',
+    name='odifmap',
     version='0.3.0b',
     packages=['ifmap'],
     license='BSD 2-Clause License',
