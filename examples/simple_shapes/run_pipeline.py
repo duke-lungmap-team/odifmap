@@ -13,20 +13,17 @@ seg_config = [
             'blur_kernel': (15, 15),
             'min_size': 3 * cell_size,
             'max_size': None,
-            'colors': ['green', 'cyan', 'red', 'violet']
+            'colors': ['green']
         }
     },
-    {
-        'type': 'saturation',
-        'args': {'blur_kernel': (63, 63), 'min_size': 3 * cell_size, 'max_size': None}
-    },
-    {
-        'type': 'saturation',
-        'args': {'blur_kernel': (31, 31), 'min_size': 3 * cell_size, 'max_size': None}
-    },
-    {
-        'type': 'saturation',
-        'args': {'blur_kernel': (15, 15), 'min_size': 3 * cell_size, 'max_size': None}
+{
+        'type': 'color',
+        'args': {
+            'blur_kernel': (15, 15),
+            'min_size': 3 * cell_size,
+            'max_size': None,
+            'colors': ['red']
+        }
     },
     {
         'type': 'color',
@@ -34,7 +31,7 @@ seg_config = [
             'blur_kernel': (15, 15),
             'min_size': 3 * cell_size,
             'max_size': None,
-            'colors': ['green', 'yellow', 'red']
+            'colors': ['yellow']
         }
     },
 ]
