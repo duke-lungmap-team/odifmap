@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='odifmap',
     version='0.3.0b',
-    packages=['ifmap'],
+    packages=['odifmap'],
     license='BSD 2-Clause License',
     long_description=open('README.md').read(),
     author='Scott White',

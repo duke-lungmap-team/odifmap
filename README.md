@@ -1,4 +1,4 @@
-# Onotology Driven Immunofluorescence Microscopy Analysis Pipeline (odifmap)
+# Ontology Driven Immunofluorescence Microscopy Analysis Pipeline (odifmap)
 A Python library for ontology-driven segmentation and classification of objects in immunofluorescence 
 microscopy images.
 
@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Importing `ifmap` modules
+### Importing `odifmap` modules
 
 The `odifmap` package contains 2 modules used for executing the analysis pipeline: `utils` 
 and `pipeline`:
