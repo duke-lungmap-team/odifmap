@@ -16,7 +16,7 @@ seg_config = [
             'colors': ['green']
         }
     },
-{
+    {
         'type': 'color',
         'args': {
             'blur_kernel': (15, 15),
@@ -37,13 +37,12 @@ seg_config = [
 ]
 
 image_set_dir = 'images'
-image_set_path = image_set_dir
 output_path = os.path.join(
-    'images',
+    image_set_dir,
     'tmp'
 )
 
-# make our 'tmp' directory for caching trained & tested pipeline instances
+# create 'tmp' directory for caching trained & tested pipeline instances
 if not os.path.isdir(output_path):
     os.makedirs(output_path, exist_ok=True)
 
@@ -59,7 +58,7 @@ try:
     test_img_hsv = pck['test_img_hsv']
 except FileNotFoundError:
     # get training data
-    training_data = utils.get_training_data_for_image_set(image_set_path)
+    training_data = utils.get_training_data_for_image_set(image_set_dir)
     # remove an image from training data to use for predict testing
     test_img_name = '_0.tif'
     test_data = training_data.pop(test_img_name)
