@@ -5,7 +5,7 @@ import os
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import cv2_extras as cv2x
-from ifmap import utils, color_utils
+from odifmap import utils, color_utils
 
 # weird import style to un-confuse PyCharm
 try:
@@ -169,6 +169,7 @@ def generate_structure_candidates(
             )
         else:
             raise ValueError("Invalid config, use 'color' or 'saturation' for 'type'")
+
         if use_signal_mask:
             contours = utils.dilate_contours_by_signal_mask(
                 contours,

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import multiprocessing
 import os
 import json
-from ifmap import color_utils
+from odifmap import color_utils
 
 # weird import style to un-confuse PyCharm
 try:
