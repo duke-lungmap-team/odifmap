@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from ifmap import utils, pipeline
+from odifmap import utils, pipeline
 import pickle
 
 cell_radius = 16

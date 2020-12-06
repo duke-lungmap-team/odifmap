@@ -2,8 +2,8 @@ import os
 import json
 import numpy as np
 import pickle
-from ifmap import utils, pipeline, onto_utils
-from ifmap.ontology import onto as lung_ontology
+from odifmap import utils, pipeline, onto_utils
+from odifmap.ontology import onto as lung_ontology
 
 cell_radius = 16
 cell_size = np.pi * (cell_radius ** 2)
