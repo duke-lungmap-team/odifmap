@@ -36,11 +36,11 @@ def non_uniformity_correction(img_hsv):
     return img_hsv_corr
 
 
-def find_color_correction_reference(hsv_imgs):
+def find_color_correction_reference(hsv_images):
     b_h_value_counts = []
     b_h_means = []
 
-    for i, img_hsv in enumerate(hsv_imgs):
+    for i, img_hsv in enumerate(hsv_images):
         # get the blue mask
         # TODO: reference color should be configurable, not hard-coded
         b_mask = color_utils.create_color_mask(img_hsv, colors=['blue'])
@@ -61,7 +61,7 @@ def find_color_correction_reference(hsv_imgs):
 
     upper_count = float(max(b_h_value_counts))
 
-    for i in range(len(hsv_imgs)):
+    for i in range(len(hsv_images)):
         val_count_comp = b_h_value_counts[i] / upper_count
 
         score = np.mean([val_count_comp, b_center_devs[i]])
@@ -73,11 +73,11 @@ def find_color_correction_reference(hsv_imgs):
     return best_idx
 
 
-def color_correction(hsv_imgs, ref_idx):
+def color_correction(hsv_images, ref_idx):
     final_corr_images_rgb = []
-    ref_img_bgr = cv2.cvtColor(hsv_imgs[ref_idx], cv2.COLOR_HSV2BGR)
+    ref_img_bgr = cv2.cvtColor(hsv_images[ref_idx], cv2.COLOR_HSV2BGR)
 
-    for i, img_hsv in enumerate(hsv_imgs):
+    for i, img_hsv in enumerate(hsv_images):
         if i == ref_idx:
             final_corr_images_rgb.append(cv2.cvtColor(img_hsv, cv2.COLOR_HSV2RGB))
             continue

@@ -159,7 +159,7 @@ def generate_structure_candidates(
             )
         elif seg['type'] == 'saturation':
             # TODO: should img_s be changed to the sat channel of the
-            # b_suppressed img? does it make a difference, are they the same?
+            #       b_suppressed img? does it make a difference, are they the same?
             contours = utils.generate_saturation_contours(
                 img_s,
                 blur_kernel=seg['args']['blur_kernel'],
