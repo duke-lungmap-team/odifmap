@@ -80,7 +80,6 @@ def get_probe_structure_map(ontology, probe_labels):
 
 
 def build_seg_config(ontology, probes, probe_colors, cell_size, kernel_adjustment=0):
-    # build seg config for current image
     probe_colors = [c.lower() for c in probe_colors]
     probe_structure_map = get_probe_structure_map(ontology, probes)
     k = kernel_adjustment
@@ -112,7 +111,7 @@ def build_seg_config(ontology, probes, probe_colors, cell_size, kernel_adjustmen
         non_has_part_colors.add('gray')
 
     seg_config = [
-        # 1st seg stage uses 'has_part colors'
+        # 1st seg stage uses "has_part" colors
         {
             'type': 'color',
             'args': {
@@ -147,7 +146,7 @@ def build_seg_config(ontology, probes, probe_colors, cell_size, kernel_adjustmen
                 'max_size': None
             }
         },
-        # final stage is a color stage on the non has part colors
+        # final stage is a color stage on the "non_has_part" colors
         {
             'type': 'color',
             'args': {
