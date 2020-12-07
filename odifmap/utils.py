@@ -1,13 +1,14 @@
-import numpy as np
-from PIL import Image
-import cv2_extras as cv2x
-from sklearn.cluster import spectral_clustering
-from sklearn.feature_extraction import image as sk_image
-import matplotlib.pyplot as plt
+import json
 import multiprocessing
 import os
-import json
-from odifmap import color_utils
+
+import cv2_extras as cv2x
+import cv_color_features as color_utils
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+from sklearn.cluster import spectral_clustering
+from sklearn.feature_extraction import image as sk_image
 
 # weird import style to un-confuse PyCharm
 try:
