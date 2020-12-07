@@ -20,6 +20,7 @@ setup(
         'pandas (>=1.0.5)',
         'xgboost (>=1.1.1)',
         'cv2-extras @ git+https://github.com/whitews/cv2-extras.git',
+        'cv_color_features (>=1.5.1)',
         'ontospy (>=1.9.8.3)'
     ]
 )
