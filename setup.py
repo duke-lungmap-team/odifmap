@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='odifmap',
-    version='0.3.0',
+    version='0.3.1',
     packages=['odifmap'],
     license='BSD 2-Clause License',
     long_description=open('README.md').read(),
@@ -19,7 +19,7 @@ setup(
         'Pillow (>=8.0.1)',
         'pandas (>=1.0.5)',
         'xgboost (>=1.1.1)',
-        'cv2-extras @ git+https://github.com/whitews/cv2-extras.git',
+        'cv2-extras (>=0.5.4)',
         'cv_color_features (>=1.5.1)',
         'ontospy (>=1.9.8.3)'
     ]
