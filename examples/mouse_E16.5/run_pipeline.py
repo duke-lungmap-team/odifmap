@@ -83,6 +83,8 @@ pipeline.plot_test_results(
     output_path
 )
 
+pipeline.export_results(candidate_contours, pred_results, output_path)
+
 # optional cell segmentation
 # utils.process_structures_into_cells(
 #     test_img_hsv,
