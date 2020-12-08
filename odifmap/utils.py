@@ -17,7 +17,7 @@ except ImportError:
     import cv2
 
 
-true_blue = 120  # in cv2 hue channel (ranges from 0 to 179)
+HUE_REF_BLUE = 120  # in cv2 hue channel (ranges from 0 to 179)
 
 
 def non_uniformity_correction(img_hsv):
@@ -52,7 +52,7 @@ def find_color_correction_reference(hsv_images):
         b_h_means.append(np.mean(b_h_values))
 
     # TODO: again the reference hue should be configurable, not hard-coded
-    b_h_mean_dev = np.abs(np.array(b_h_means) - true_blue)
+    b_h_mean_dev = np.abs(np.array(b_h_means) - HUE_REF_BLUE)
     max_b_dev = b_h_mean_dev.max()
 
     b_center_devs = 1 - (b_h_mean_dev / max_b_dev)
