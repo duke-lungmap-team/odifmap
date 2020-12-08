@@ -358,3 +358,37 @@ def plot_test_results(img_hsv, contours, pred_results, save_dir, annotate=True):
             )
         else:
             plt.show()
+
+
+def export_results(contours, pred_results, save_dir):
+    print("Exporting results to CSV...")
+
+    tmp_data = []
+
+    for res in pred_results:
+        c_idx = res['contour_index']
+        contour = contours[c_idx]
+        label = res['label']
+        label_prob = res['label_prob']
+
+        c_area = cv2.contourArea(contour)
+        (c_center_x, c_center_y) = tuple(contour.mean(axis=0)[0].round().astype(np.uint))
+
+        tmp_data.append(
+            {
+                'contour_index': c_idx,
+                'center_x': c_center_x,
+                'center_y': c_center_y,
+                'contour_area': c_area,
+                'label': label,
+                'probability': label_prob
+            }
+        )
+
+    df = pd.DataFrame(
+        tmp_data,
+        columns=['contour_index', 'center_x', 'center_y', 'contour_area', 'label', 'probability']
+    )
+    df.set_index('contour_index', inplace=True)
+
+    df.to_csv(os.path.join(save_dir, "test_results.csv"))
