@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='odifmap',
-    version='0.3.1',
+    version='1.0',
     packages=['odifmap'],
     license='BSD 2-Clause License',
     long_description=open('README.md').read(),
