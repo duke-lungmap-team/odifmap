@@ -4,7 +4,6 @@ microscopy images.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4469552.svg)](https://doi.org/10.5281/zenodo.4469552)
 
-
 ## Environment
 To match the environment requirements needed to complete the examples, please install all
 dependencies listed in the `requirements.txt` file.
